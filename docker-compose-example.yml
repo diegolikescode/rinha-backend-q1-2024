@@ -1,0 +1,80 @@
+# TODO: the whole thing
+version: '3.5'
+services:
+  db:
+    image: postgres:latest
+    networks:
+      - rinha-network
+    container_name: rinha2023q3_db_1
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: rinha
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"] 
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '1GB'
+
+  api1:
+    image: rinha2023q3:latest
+    restart: always
+    networks:
+      - rinha-network
+    container_name: rinha2023q3_1
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "6969"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '0.5GB'
+
+  api2:
+    image: rinha2023q3:latest
+    restart: always
+    networks:
+      - rinha-network
+    container_name: rinha2023q3_2
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "6969"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '0.5GB'
+
+  nginx:
+    image: nginx:latest
+    networks:
+      - rinha-network
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api1
+      - api2
+    ports:
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '1GB'
+
+networks:
+  rinha-network:
+    driver: bridge

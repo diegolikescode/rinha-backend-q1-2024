@@ -1,0 +1,36 @@
+version: '3.5'
+services:
+  db:
+    image: cassandra:latest
+    networks:
+      - rinha-network-2024-q1
+    container_name: rinha2024q1-cassandra
+    environment:
+        - CASSANDRA_SEEDS=rinha
+        - CASSANDRA_CLUSTER_NAME=RinhaCluster
+        - CASSANDRA_AUTHENTICATOR=PasswordAuthenticator
+        - CASSANDRA_AUTHORIZER=CassandraAuthorizer
+        - CASSANDRA_SUPERUSER_NAME=rinha
+        - CASSANDRA_SUPERUSER_PASSWORD=rinha
+        - CASSANDRA_CONFIG=/etc/cassandra/cassandra.yaml
+    # healthcheck:
+#  test: ["CMD-SHELL", "pg_isready -U postgres"] 
+    ports:
+      - "9042:9042"
+    expose:
+      - "9042"
+
+    volumes:
+      - ./data/:/var/lib/cassandra
+      - ./cassandra.yaml:/etc/cassandra/cassandra.yaml
+    # deploy:
+#   resources:
+#        limits:
+#         cpus: '1'
+#          memory: '2GB'
+    restart: always
+
+networks:
+  rinha-network-2024-q1:
+    driver: bridge
+
