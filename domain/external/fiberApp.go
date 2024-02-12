@@ -8,7 +8,8 @@ import (
 
 func SetupFiber() {
     app := fiber.New()
-    app.Get("/clientes/:id/transacoes", HttpTransacoes)
+    app.Post("/clientes/:id/transacoes", HttpTransacoes)
 
     log.Fatal(app.Listen(":6969"))
 }
+

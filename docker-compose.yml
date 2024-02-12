@@ -13,8 +13,11 @@ services:
         - CASSANDRA_SUPERUSER_NAME=rinha
         - CASSANDRA_SUPERUSER_PASSWORD=rinha
         - CASSANDRA_CONFIG=/etc/cassandra/cassandra.yaml
-    # healthcheck:
-#  test: ["CMD-SHELL", "pg_isready -U postgres"] 
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES;"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
       - "9042:9042"
     expose:

@@ -1,10 +1,10 @@
 package external
 
-import (
-	"fmt"
-
-	"github.com/gofiber/fiber/v3"
-)
+type Cliente struct {
+    ID      int32 `json:"id"`
+    Nome    string `json:"nome"`
+    Limite  int32 `json:"limite"`
+}
 
 type Transacao struct {
     Valor      int32 `json:"valor"`
@@ -29,10 +29,4 @@ type Extrato struct {
     UltimasTransacoes   []Transacao `json:"ultimas_transacoes"`
 }
 
-func HttpTransacoes(c fiber.Ctx) error {
-    userID := c.Params("id")
-    fmt.Println(userID)
-
-    return c.Status(fiber.StatusOK).SendString("OKAY BEIBE ALRAITE")
-}
 
