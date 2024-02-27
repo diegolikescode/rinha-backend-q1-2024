@@ -30,7 +30,7 @@ func SetupPostgres() {
 	log.Fatal("ERROR CONNECTING TO POSTGRES", err)
     }
 
-    Session.SetMaxOpenConns(5)
+    Session.SetMaxOpenConns(10)
     Session.SetMaxIdleConns(2)
     Session.SetConnMaxLifetime(time.Minute * 5)
 

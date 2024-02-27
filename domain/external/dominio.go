@@ -8,9 +8,9 @@ import (
 )
 
 var (
-    InsertStmt *sql.Stmt
-    UpdateStmt *sql.Stmt
-    SelectTransacoesStmt *sql.Stmt
+    InserirCredito *sql.Stmt
+    InserirDebito *sql.Stmt
+    SelectUltimasTransacoes *sql.Stmt
 )
 
 type Cliente struct {
@@ -44,19 +44,22 @@ type Extrato struct {
 
 func DeclareStmts() {
     var err error
-    InsertStmt, err = config.Session.Prepare(
-	`INSERT INTO transacoes (id_cliente, valor, tipo, descricao, realizada_em)
-	VALUES ($1, $2, $3, $4, $5)`)   
+    InserirCredito, err = config.Session.Prepare(
+	`SELECT * FROM inserir_credito($1, $2, $3)`)   
     if err != nil {
-	log.Fatal("ERROR: insertStmt ", err)
+	log.Fatal("ERROR: InserirCredito ", err)
     }
 
-    UpdateStmt, err = config.Session.Prepare(`
-	UPDATE clientes 
-	SET saldo = $1
-	WHERE id = $2;`)
+    InserirDebito, err = config.Session.Prepare(
+	`SELECT * FROM inserir_debito($1, $2, $3)`)   
     if err != nil {
-	log.Fatal("ERROR: insertStmt ", err)
+	log.Fatal("ERROR: inserir_debito ", err)
+    }
+
+    SelectUltimasTransacoes, err = config.Session.Prepare(
+	`SELECT * FROM obter_ultimas_transacoes($1)`)
+    if err != nil {
+	log.Fatal("ERROR: obter_ultimas_transacoes ", err)
     }
 
 }

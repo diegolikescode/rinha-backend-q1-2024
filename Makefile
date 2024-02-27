@@ -19,5 +19,8 @@ updown:
 comp:
 	docker-compose up --build
 
+comp-db:
+	docker-compose -f compose-db.yml up --build
+
 t:
 	./testes-local.sh

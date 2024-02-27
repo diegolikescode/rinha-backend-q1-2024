@@ -16,7 +16,7 @@ services:
     expose:
       - "5432"
     volumes:
-      - ./firstload.sql:/docker-entrypoint-initdb.d/firstload.sql
+      - ./postgres.sql:/docker-entrypoint-initdb.d/postgres.sql
       - ./postgres.conf:/docker-entrypoint-initdb.d/postgres.conf
     deploy:
       resources:
