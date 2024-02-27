@@ -1,10 +1,6 @@
 lessgo:
 	go run cmd/main.go
 
-pg:
-	docker-compose down
-	docker-compose up --build
-
 img:
 	docker build -t rinha2024q1 .
 
@@ -19,7 +15,8 @@ updown:
 comp:
 	docker-compose up --build
 
-comp-db:
+pg:
+	docker-compose -f compose-db.yml down --volumes --remove-orphans
 	docker-compose -f compose-db.yml up --build
 
 t:

@@ -12,7 +12,7 @@ import (
 var Session *sql.DB
 
 func SetupPostgres() {
-    dbHost := "db"
+    dbHost := "localhost" // localhost | db
     dbPort := "5432"
     dbName := "rinha"
     dbUser := "postgres"
@@ -30,8 +30,8 @@ func SetupPostgres() {
 	log.Fatal("ERROR CONNECTING TO POSTGRES", err)
     }
 
-    Session.SetMaxOpenConns(10)
-    Session.SetMaxIdleConns(2)
+    Session.SetMaxOpenConns(5)
+    Session.SetMaxIdleConns(0)
     Session.SetConnMaxLifetime(time.Minute * 5)
 
     log.Println("DATABASE CONFIGURED")

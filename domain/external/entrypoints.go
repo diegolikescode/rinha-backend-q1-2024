@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -12,9 +13,12 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+var LocalValidator FieldValidator
+
 func NovaTransacao(c fiber.Ctx) error {
     log.Println("STARTING NovaTransacao")
     var parseErr error
+
 
     var t Transacao
     if parseErr = json.Unmarshal(c.Body(), &t); parseErr != nil {
@@ -22,24 +26,39 @@ func NovaTransacao(c fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusInternalServerError)
     }
 
+    if(!LocalValidator.IsInputValid(t)) {
+	return c.SendStatus(fiber.StatusUnprocessableEntity)
+    }
+
     var userID int
     if userID, parseErr = strconv.Atoi(c.Params("id")); parseErr != nil {
-	log.Fatal("o ID do cliente nao eh um integer valido", userID)
+	log.Println("o ID do cliente nao eh um integer valido", userID)
     }
 
     var conta Conta
     if t.Tipo == "c" {
-	getIt, err := InserirCredito.Exec(userID, t.Valor, t.Descricao)
+	err := InserirCredito.QueryRow(userID, t.Valor, t.Descricao).Scan(&conta.Saldo, &conta.Limite)
 	if err != nil {
-	    log.Fatal("not able to getIt")
+	    log.Println("ERROR: InserirCredito:: ", err)
+	    if strings.Contains(err.Error(), "NOUSER") {
+		return c.SendStatus(fiber.StatusNotFound)
+	    }
 	}
-	fmt.Println(getIt)
+	InserirCredito.Close()
+
     } else {
-	getIt, err := InserirDebito.Exec(userID, t.Valor, t.Descricao)
+	err := InserirDebito.QueryRow(userID, t.Valor, t.Descricao).Scan(&conta.Saldo, &conta.Limite)
 	if err != nil {
-	    log.Fatal("not able to getIt")
+	    log.Println("ERROR: InserirDebito:: ", err)
+	    if strings.Contains(err.Error(), "NOUSER") {
+		return c.SendStatus(fiber.StatusNotFound)
+	    }
+
+	    if strings.Contains(err.Error(), "NOLIMIT") {
+		return c.SendStatus(fiber.StatusUnprocessableEntity)
+	    }
 	}
-	fmt.Println(getIt)
+	InserirDebito.Close()
     }
 
     log.Println("entrypoint NovaTransacao executado com sucesso")
@@ -50,22 +69,26 @@ func ClienteExtrato(c fiber.Ctx) error {
     var parseErr error
     var userID int
     if userID, parseErr = strconv.Atoi(c.Params("id")); parseErr != nil {
-	log.Fatal("o ID do cliente nao eh um integer valido", userID)
+	log.Println("o ID do cliente nao eh um integer valido", userID)
     }
 
-    if userID < 1 || userID > 5 {
-	return c.SendStatus(fiber.StatusNotFound)
+    rows, err := SelectUltimasTransacoes.Query(userID)
+    if err != nil {
+	log.Println("ERROR: SelectUltimasTransacoes:: ", err)
+	if strings.Contains(err.Error(), "NOUSER") {
+	    return c.SendStatus(fiber.StatusNotFound)
+	}
     }
-
-    var wg sync.WaitGroup
-    wg.Add(2)
 
     var extrato Extrato
-    go buscaExtrato(&wg, &extrato, &userID)
-    go buscaTransacoes(&wg, &extrato, &userID)
-    wg.Wait()
-    extrato.Saldo.DataExtrato = TimeNowFormatted()
+    for rows.Next() {
+	var t Transacao
+	rows.Scan(&t.Valor, &t.Tipo, &t.Descricao, &t.RealizadaEm, &extrato.Saldo.Total, &extrato.Saldo.Limite)
+	extrato.UltimasTransacoes = append(extrato.UltimasTransacoes, t)
+    }
 
+    rows.Close()
+    extrato.Saldo.DataExtrato = TimeNowFormatted()
     return c.Status(fiber.StatusOK).JSON(extrato)
 }
 
@@ -77,7 +100,7 @@ func buscaExtrato(wg *sync.WaitGroup, extrato *Extrato, userID *int) {
 	"SELECT limite, saldo FROM clientes WHERE id = $1", userID).Scan(
 	&extrato.Saldo.Limite, &extrato.Saldo.Total) 
     if err != nil {
-	log.Fatal("ERROR QueryRow ", err)
+	log.Println("ERROR QueryRow ", err)
     }
 
     log.Println("finaliza buscaExtrato")
@@ -94,13 +117,13 @@ func buscaTransacoes(wg *sync.WaitGroup, extrato *Extrato, userID *int) {
 	ORDER BY realizada_em DESC
 	LIMIT 10`, userID)
     if err != nil {
-	log.Fatal("ERROR Postgres buscaTransacoes", err)
+	log.Println("ERROR Postgres buscaTransacoes", err)
     }
 
     for rows.Next() {
 	var t Transacao 
 	if err := rows.Scan(&t.Valor, &t.Tipo, &t.Descricao, &t.RealizadaEm); err != nil {
-	    log.Fatal("ERROR Scan buscarTransacoes")
+	    log.Println("ERROR Scan buscarTransacoes")
 	}
 	extrato.UltimasTransacoes = append(extrato.UltimasTransacoes, t)
     }

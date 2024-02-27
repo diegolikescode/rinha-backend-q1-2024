@@ -11,7 +11,9 @@ Attaching to rinha-backend-q1-2024_nginx_1, rinha2024q1_2, rinha2024q1_1, rinha2
 [33mrinha2024q1_1 |[0m host=db port=5432 dbname=rinha user=postgres password=postgres sslmode=disable
 [33mrinha2024q1_1 |[0m 
 [33mrinha2024q1_1 |[0m CONN CONFIG::: host=db port=5432 dbname=rinha user=postgres password=postgres sslmode=disable
-[33mrinha2024q1_1 |[0m 2024/02/26 22:52:06 DATABASE CONFIGURED
+[33mrinha2024q1_1 |[0m SetupPostgres
+[33mrinha2024q1_1 |[0m 2024/02/27 20:47:30 DATABASE CONFIGURED
+[33mrinha2024q1_1 |[0m DeclareStmts
 [33mrinha2024q1_1 |[0m 
 [33mrinha2024q1_1 |[0m     _______ __             
 [33mrinha2024q1_1 |[0m    / ____(_) /_  ___  _____
@@ -27,7 +29,9 @@ Attaching to rinha-backend-q1-2024_nginx_1, rinha2024q1_2, rinha2024q1_1, rinha2
 [32mrinha2024q1_2 |[0m host=db port=5432 dbname=rinha user=postgres password=postgres sslmode=disable
 [32mrinha2024q1_2 |[0m 
 [32mrinha2024q1_2 |[0m CONN CONFIG::: host=db port=5432 dbname=rinha user=postgres password=postgres sslmode=disable
-[32mrinha2024q1_2 |[0m 2024/02/26 22:52:06 DATABASE CONFIGURED
+[32mrinha2024q1_2 |[0m SetupPostgres
+[32mrinha2024q1_2 |[0m 2024/02/27 20:47:30 DATABASE CONFIGURED
+[32mrinha2024q1_2 |[0m DeclareStmts
 [32mrinha2024q1_2 |[0m 
 [32mrinha2024q1_2 |[0m     _______ __             
 [32mrinha2024q1_2 |[0m    / ____(_) /_  ___  _____
@@ -67,10 +71,10 @@ Attaching to rinha-backend-q1-2024_nginx_1, rinha2024q1_2, rinha2024q1_1, rinha2
 [35mrinha2024q1_db |[0m 
 [35mrinha2024q1_db |[0m     pg_ctl -D /var/lib/postgresql/data -l logfile start
 [35mrinha2024q1_db |[0m 
-[35mrinha2024q1_db |[0m waiting for server to start....2024-02-26 22:51:38.255 UTC [48] LOG:  starting PostgreSQL 16.0 (Debian 16.0-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:38.266 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:38.285 UTC [51] LOG:  database system was shut down at 2024-02-26 22:51:36 UTC
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:38.295 UTC [48] LOG:  database system is ready to accept connections
+[35mrinha2024q1_db |[0m waiting for server to start....2024-02-27 20:47:03.449 UTC [48] LOG:  starting PostgreSQL 16.0 (Debian 16.0-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:03.456 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:03.479 UTC [51] LOG:  database system was shut down at 2024-02-27 20:47:00 UTC
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:03.490 UTC [48] LOG:  database system is ready to accept connections
 [35mrinha2024q1_db |[0m  done
 [35mrinha2024q1_db |[0m server started
 [35mrinha2024q1_db |[0m CREATE DATABASE
@@ -79,26 +83,33 @@ Attaching to rinha-backend-q1-2024_nginx_1, rinha2024q1_2, rinha2024q1_1, rinha2
 [35mrinha2024q1_db |[0m /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/postgres.conf
 [35mrinha2024q1_db |[0m 
 [35mrinha2024q1_db |[0m /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/postgres.sql
+[35mrinha2024q1_db |[0m ALTER DATABASE
 [35mrinha2024q1_db |[0m CREATE TABLE
 [35mrinha2024q1_db |[0m CREATE TABLE
 [35mrinha2024q1_db |[0m INSERT 0 5
+[35mrinha2024q1_db |[0m CREATE FUNCTION
+[35mrinha2024q1_db |[0m CREATE FUNCTION
+[35mrinha2024q1_db |[0m CREATE TYPE
+[35mrinha2024q1_db |[0m CREATE FUNCTION
+[35mrinha2024q1_db |[0m CREATE INDEX
+[35mrinha2024q1_db |[0m CREATE INDEX
 [35mrinha2024q1_db |[0m 
 [35mrinha2024q1_db |[0m 
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:38.587 UTC [48] LOG:  received fast shutdown request
-[35mrinha2024q1_db |[0m waiting for server to shut down....2024-02-26 22:51:38.592 UTC [48] LOG:  aborting any active transactions
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:38.594 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:38.595 UTC [49] LOG:  shutting down
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:38.600 UTC [49] LOG:  checkpoint starting: shutdown immediate
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.259 UTC [49] LOG:  checkpoint complete: wrote 937 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.033 s, sync=0.595 s, total=0.665 s; sync files=306, longest=0.008 s, average=0.002 s; distance=4285 kB, estimate=4285 kB; lsn=0/1919F98, redo lsn=0/1919F98
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.274 UTC [48] LOG:  database system is shut down
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:03.797 UTC [48] LOG:  received fast shutdown request
+[35mrinha2024q1_db |[0m waiting for server to shut down....2024-02-27 20:47:03.804 UTC [48] LOG:  aborting any active transactions
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:03.806 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:03.806 UTC [49] LOG:  shutting down
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:03.814 UTC [49] LOG:  checkpoint starting: shutdown immediate
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.753 UTC [49] LOG:  checkpoint complete: wrote 940 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.041 s, sync=0.857 s, total=0.947 s; sync files=310, longest=0.020 s, average=0.003 s; distance=4299 kB, estimate=4299 kB; lsn=0/191D7A0, redo lsn=0/191D7A0
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.766 UTC [48] LOG:  database system is shut down
 [35mrinha2024q1_db |[0m  done
 [35mrinha2024q1_db |[0m server stopped
 [35mrinha2024q1_db |[0m 
 [35mrinha2024q1_db |[0m PostgreSQL init process complete; ready for start up.
 [35mrinha2024q1_db |[0m 
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.320 UTC [1] LOG:  starting PostgreSQL 16.0 (Debian 16.0-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.321 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.321 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.331 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.347 UTC [66] LOG:  database system was shut down at 2024-02-26 22:51:39 UTC
-[35mrinha2024q1_db |[0m 2024-02-26 22:51:39.358 UTC [1] LOG:  database system is ready to accept connections
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.836 UTC [1] LOG:  starting PostgreSQL 16.0 (Debian 16.0-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.836 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.836 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.852 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.870 UTC [66] LOG:  database system was shut down at 2024-02-27 20:47:04 UTC
+[35mrinha2024q1_db |[0m 2024-02-27 20:47:04.882 UTC [1] LOG:  database system is ready to accept connections

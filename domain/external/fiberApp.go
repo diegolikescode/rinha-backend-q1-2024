@@ -11,6 +11,6 @@ func SetupFiber() {
     app.Post("/clientes/:id/transacoes", NovaTransacao)
     app.Get("/clientes/:id/extrato", ClienteExtrato)
 
-    log.Fatal(app.Listen(":6969"))
+    log.Println(app.Listen(":6969"))
 }
 
